@@ -99,8 +99,6 @@ function viewLowInventory(){
                 
       for (var i = 0; i < res.length; i++) {
         console.log(res[i].item_Id + ".\t" + res[i].product_name + "\t" + res[i].department_name +"\t\t$" + (res[i].price).toLocaleString('en') + "\t " + res[i].stock_quantity);
-        // console.log(res[i].item_Id + ".\t" + res[i].product_name + "\t\t$" + (res[i].price).toLocaleString('en') + "\t " + res[i].stock_quantity);
-        //console.log(res[i].item_Id + ". " + res[i].product_name + "   \t$" + parseFloat(res[i].price).toFixed(2).toLocaleString('en'));
       }
       mainMenu();
     });
@@ -172,9 +170,25 @@ function addProduct(){
 
 // end addInventory
 
-function addInventory(){
+function addInventoryX(){
 
-  //var currentQuantity;
+  var query = "SELECT * FROM products";  //query without variable
+
+    //this line takes the query, replaces the ? from var query with object, res is the result  
+    connection.query(query, function(err, res) {
+        
+        console.log("\n");
+        console.log("                ** Total Inventory **\n");
+
+        console.log("item ID  Product Name   Department   \tPrice   \t quantity in stock");
+        console.log("-------  -------------- ----------   \t-----   \t ----------------");
+                
+      for (var i = 0; i < res.length; i++) {
+        console.log(res[i].item_Id + ".\t" + res[i].product_name + "\t" + res[i].department_name +"\t\t$" + (res[i].price).toLocaleString('en') + "\t " + res[i].stock_quantity);
+        //console.log(res[i].item_Id + ". " + res[i].product_name + "   \t$" + parseFloat(res[i].price).toFixed(2).toLocaleString('en'));
+      }
+      mainMenu();
+    });
 
   inquirer
   .prompt([
@@ -192,10 +206,6 @@ function addInventory(){
   .then(function(answer){
 
 
-
-    
-  
-    
     var query = "SELECT stock_quantity FROM products WHERE item_Id = ?" ;  
     connection.query(query, answer.item, function(err, res) {
         console.log("quantity = " , res[0].stock_quantity);
@@ -222,8 +232,92 @@ function addInventory(){
 } // end addProduct
 
 
+//********************************************************************************************************************************************* */
+//********************************************************************************************************************************************* */
 
 
+function addInventory(){
+
+    
+  var query = "SELECT * FROM products";  //query without variable
+
+  //this line takes the query, replaces the ? from var query with object, res is the result  
+  connection.query(query, function(err, res) {
+      console.log("\n");
+              
+      console.log("\n");
+      console.log("       ** Current Inventory **\n");
+      console.log("item ID  Product Name   Department   \tPrice   \t quantity in stock");
+      console.log("-------  -------------- ----------   \t-----   \t ----------------");
+              
+    for (var i = 0; i < res.length; i++) {
+      console.log(res[i].item_Id + ".\t" + res[i].product_name + "\t" + res[i].department_name +"\t\t$" + (res[i].price).toLocaleString('en') + "\t " + res[i].stock_quantity);
+    }
+      console.log("\n");
+    inquirer
+  .prompt([
+    {
+      name: "item",
+      type: "input",
+      message: "What is the ID number of the product you wish to add inventory?"
+    },
+    {
+      name: "quantity",
+      type: "input",
+      message: "How many would you like to add?"
+    }
+  ])
+  .then(function(answer){
+
+      for(var i = 0; i < res.length; i++){
+
+        if (res[i].item_Id == answer.item){
+          var id = res[i].item_Id;
+          var description = res[i].product_name;
+          var priceEa = res[i].price;
+          var inStock = parseInt(res[i].stock_quantity);
+
+        }
+
+      }//end for
+
+      console.log("\n\nYou have ordered: " + answer.quantity + " of item #" + answer.item + ". " + description);
+   
+          
+          
+          var query = "UPDATE products SET stock_quantity = ? WHERE item_Id = ?" ;  
+
+          //connection.query(query, [(inStock - orderQuantity), itemNum],function(err, res) {
+            connection.query(query, [(inStock + parseInt(answer.quantity)), id ],function(err, res) {
+
+              //console.log("Inventory updated!");
+              console.log("\n** Done ** \n\nYou have added: " + answer.quantity + " " + description + "(s) to the inventory.");   
+              mainMenu();
+            });
+      })
+  });
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//********************************************************************************************************************************************* */
+//********************************************************************************************************************************************* */
     
 
 mainMenu();
