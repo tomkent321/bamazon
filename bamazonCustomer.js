@@ -20,9 +20,10 @@ connection.connect(function(err) {
 });
 
 function runStore(){
-
+  var thisSale = [];
 function showInventory(){
 
+    
     var query = "SELECT * FROM products";  //query without variable
 
     //this line takes the query, replaces the ? from var query with object, res is the result  
@@ -49,23 +50,22 @@ function showInventory(){
     ])
     .then(function(answer){
 
+        for(var i = 0; i < res.length; i++){
 
+          if (res[i].item_Id == answer.item){
+            var id = res[i].item_Id;
+            var description = res[i].product_name;
+            var priceEa = res[i].price;
+            var inStock = res[i].stock_quantity;
 
+          }
 
-
-
-        var description = res[answer.item-1].product_name;
-        console.log("description: " + description);
-        
-        var priceEa = res[answer.item-1].price;
-        var itemNum = answer.item;
-        var inStock = res[answer.item-1].stock_quantity;
-        var orderQuantity = answer.quantity;
-2
+        }
 
         console.log("\n\nYou have ordered: " + answer.quantity + " of item #" + answer.item + ". " + description);
      
-        if(answer.quantity > res[answer.item-1].stock_quantity){
+        //if(answer.quantity > res[answer.item-1].stock_quantity){
+          if(answer.quantity > inStock){  
             console.log("\n\nSorry! We have insufficient quantity to fulfill your order.\nWould you like to order something else?\n");
             
 
@@ -99,12 +99,17 @@ function showInventory(){
             
             var query = "UPDATE products SET stock_quantity = ? WHERE item_Id = ?" ;  
  
-            connection.query(query, [(inStock - orderQuantity), itemNum],function(err, res) {
+            //connection.query(query, [(inStock - orderQuantity), itemNum],function(err, res) {
+              connection.query(query, [(inStock - answer.quantity), answer.item],function(err, res) {
 
                 //console.log("Inventory updated!");
-                console.log("\n** Order Complete ** \n\nYou have purchased: " + orderQuantity + " " + description + "(s) at $" + priceEa.toLocaleString('en') + " each \n------------------------------------\nTotal: $" + (orderQuantity * priceEa).toLocaleString('en'));  
+                console.log("\n** Order Complete ** \n\nYou have purchased: " + answer.quantity + " " + description + "(s) at $" + priceEa.toLocaleString('en') + " each \n------------------------------------\nTotal: $" + (answer.quantity * priceEa).toLocaleString('en'));  
                 
-
+                thisSale.push({id: id,
+                              description: description,
+                              quantity: answer.quantity,
+                              price: priceEa,
+                                              });
 
                 inquirer
                 .prompt([
@@ -115,7 +120,6 @@ function showInventory(){
                     choices: [
                       "Yes",
                       "No"
-                    
                     ]
                   }
                   ])
@@ -124,23 +128,29 @@ function showInventory(){
                     
                     showInventory();
                   } else{
-                    console.log("Thank you for shopping at Al's Aircraft Barn!");
+
+                    console.log(" \t\t****** Your total purchase this session  ********\n");
+                    console.log(" \tid\tQty\tdescription\teach\t\t         total");
+                    console.log(" \t--\t----\t--------------\t----------\t\t-----------");
+                    
+                        var totalPrice = 0;
+
+                    for (var key in  thisSale) {
+                    
+                      
+                      console.log(" \t" + thisSale[key].id + " \t" + thisSale[key].quantity + " \t" + thisSale[key].description + " \t $" + parseFloat((thisSale[key].price).toFixed(2)).toLocaleString().replace(/\.([0-9])$/, ".$10") + " \t\t$" + parseFloat((thisSale[key].quantity * thisSale[key].price).toFixed(2)).toLocaleString().replace(/\.([0-9])$/, ".$10")) ;
+
+                      totalPrice += (thisSale[key].quantity * thisSale[key].price);
+                    }
+
+                    console.log(" \t-----------------------------------------------------------------------");
+                    console.log("\tTotal                                                   $" + parseFloat((totalPrice).toFixed(2)).toLocaleString().replace(/\.([0-9])$/, ".$10"));
+                    console.log("\n\nThank you for shopping at Al's Aircraft Barn!");
                     return;
                   }
-              
-        
               });
-
-
-
-
-
-
               });
-             
-        }
-
-
+        }       
     })
 
      
