@@ -49,23 +49,51 @@ function showInventory(){
     ])
     .then(function(answer){
 
+
+
+
+
+
         var description = res[answer.item-1].product_name;
+        console.log("description: " + description);
+        
         var priceEa = res[answer.item-1].price;
         var itemNum = answer.item;
         var inStock = res[answer.item-1].stock_quantity;
         var orderQuantity = answer.quantity;
-
-        // console.log("desc: " + description);
-        // console.log("itemNum: " + itemNum);
-        // console.log("inStock: " + inStock);
-        // console.log("orderQuantity: " + orderQuantity);
-        
+2
 
         console.log("\n\nYou have ordered: " + answer.quantity + " of item #" + answer.item + ". " + description);
      
         if(answer.quantity > res[answer.item-1].stock_quantity){
             console.log("\n\nSorry! We have insufficient quantity to fulfill your order.\nWould you like to order something else?\n");
-            showInventory();
+            
+
+            inquirer
+            .prompt([
+              {         //begin prompt
+                name: "continue",
+                type: "rawlist",
+                message: "\nTry another aircraf?\n",
+                choices: [
+                  "Yes",
+                  "No"
+                
+                ]
+              }
+              ])
+            .then(answer => {
+              if(answer.continue == "Yes") {
+                
+                showInventory();
+              } else{
+                console.log("Thank you for shopping at Al's Aircraft Barn!");
+                return;
+              }
+          
+    
+          });
+            
         } else {
             //console.log("in stock: ",res[answer.item-1].stock_quantity );
             
@@ -75,23 +103,52 @@ function showInventory(){
 
                 //console.log("Inventory updated!");
                 console.log("\n** Order Complete ** \n\nYou have purchased: " + orderQuantity + " " + description + "(s) at $" + priceEa.toLocaleString('en') + " each \n------------------------------------\nTotal: $" + (orderQuantity * priceEa).toLocaleString('en'));  
-                                
                 
-                
-          });
 
+
+                inquirer
+                .prompt([
+                  {         //begin prompt
+                    name: "continue",
+                    type: "rawlist",
+                    message: "\nBuy another aircraf?\n",
+                    choices: [
+                      "Yes",
+                      "No"
+                    
+                    ]
+                  }
+                  ])
+                .then(answer => {
+                  if(answer.continue == "Yes") {
+                    
+                    showInventory();
+                  } else{
+                    console.log("Thank you for shopping at Al's Aircraft Barn!");
+                    return;
+                  }
+              
+        
+              });
+
+
+
+
+
+
+              });
+             
         }
-
 
 
     })
 
-
+     
     });
-
+    
 } //end of showInventory()
 
-  showInventory();
+showInventory(); 
 }//end of runStore()
 
 
