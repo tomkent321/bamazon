@@ -64,8 +64,8 @@ function viewProducts(){
     connection.query(query, function(err, res) {
         
         console.log("\n");
+        console.log("                ** Al's Aircraft Barn **\n");
         console.log("                ** Total Inventory **\n");
-
         console.log("item ID  Product Name   Department   \tPrice   \t quantity in stock");
         console.log("-------  -------------- ----------   \t-----   \t ----------------");
                 
@@ -88,6 +88,7 @@ function viewLowInventory(){
     connection.query(query, function(err, res) {
         
         console.log("\n");
+        console.log("                ** Al's Aircraft Barn **\n");
         console.log("       ** Low Inventory (less than 5) Products **\n");
         console.log("item ID  Product Name   Department   \tPrice   \t quantity in stock");
         console.log("-------  -------------- ----------   \t-----   \t ----------------");
@@ -161,7 +162,8 @@ function addInventory(){
       console.log("\n");
               
       console.log("\n");
-      console.log("       ** Current Inventory **\n");
+      console.log("                ** Al's Aircraft Barn **\n");
+      console.log("                ** Current Inventory **\n");
       console.log("item ID  Product Name   Department   \tPrice   \t quantity in stock");
       console.log("-------  -------------- ----------   \t-----   \t ----------------");
               
@@ -208,27 +210,6 @@ function addInventory(){
       })
   });
 } 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//********************************************************************************************************************************************* */
-//********************************************************************************************************************************************* */
     
 
 mainMenu();
