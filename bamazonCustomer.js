@@ -95,12 +95,12 @@ function showInventory(){
           });
             
         } else {
-            //console.log("in stock: ",res[answer.item-1].stock_quantity );
             
-            var query = "UPDATE products SET stock_quantity = ? WHERE item_Id = ?" ;  
+            
+            var query = "UPDATE products SET stock_quantity = ?, product_sales = ? WHERE item_Id = ?" ;  
  
             //connection.query(query, [(inStock - orderQuantity), itemNum],function(err, res) {
-              connection.query(query, [(inStock - answer.quantity), answer.item],function(err, res) {
+              connection.query(query, [(inStock - answer.quantity), (answer.quantity * priceEa), answer.item],function(err, res) {
 
                 //console.log("Inventory updated!");
                 console.log("\n** Order Complete ** \n\nYou have purchased: " + answer.quantity + " " + description + "(s) at $" + priceEa.toLocaleString('en') + " each \n------------------------------------\nTotal: $" + (answer.quantity * priceEa).toLocaleString('en'));  

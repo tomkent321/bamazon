@@ -35,3 +35,28 @@ VALUES
 ("Cessna 152", "piston", 25000, 12),
 ("Cessna 182", "piston", 92000, 3),
 ("Bell Jet Ranger", "helicopater", 1750000, 6);
+
+
+
+-- 1
+SELECT department_id, products.`department_name`,`over_head_costs`
+FROM departments
+INNER JOIN products ON departments.department_name = products.department_name GROUP BY department_id;
+
+SELECT department_id, products.`department_name`,`over_head_costs`
+FROM departments
+INNER JOIN products ON departments.department_name = products.department_name GROUP BY department_id;
+
+
+
+
+
+SELECT departments.department_id, products.department_name, departments.over_head_costs, SUM(products.product_sales) AS dept_sales  
+FROM departments 
+INNER JOIN products ON departments.department_name = products.department_name GROUP BY department_id;
+
+
+
+
+
+
