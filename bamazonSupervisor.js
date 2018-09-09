@@ -68,12 +68,8 @@ function runSupervisor(){
           });         
       } 
 
-      var sales;
+      
 function viewSalesByDept(){
-
-
-    var sales = [];
-    var depts = [];
 
     var query = "SELECT departments.department_id, products.department_name, departments.over_head_costs, SUM(products.product_sales) AS dept_sales";  
         query += " FROM departments "; 
@@ -93,11 +89,7 @@ function viewSalesByDept(){
 
       for(var i = 0; i< res.length; i++) {
 
-        if(res[i].dept_sales == 0){
-          var profit = 0;
-        } else {
-          var profit = res[i].dept_sales - (res[i].dept_sales * res[i].over_head_costs);
-        }
+        var profit = res[i].dept_sales - (res[i].dept_sales * res[i].over_head_costs);
 
         table.push([res[i].department_id,
                     res[i].department_name,
@@ -114,7 +106,7 @@ function viewSalesByDept(){
 
 
         }
-        
+        mainMenu();
     });
 
 
@@ -123,73 +115,32 @@ function viewSalesByDept(){
 } 
 
 
-function viewLowInventory(){
-
-    var query = "SELECT * FROM products WHERE stock_quantity < 5";  //query without variable
-
-    //this line takes the query, replaces the ? from var query with object, res is the result  
-    connection.query(query, function(err, res) {
-        
-        console.log("\n");
-        console.log("                ** Al's Aircraft Barn **\n");
-        console.log("       ** Low Inventory (less than 5) Products **\n");
-        console.log("item ID  Product Name   Department   \tPrice   \t quantity in stock");
-        console.log("-------  -------------- ----------   \t-----   \t ----------------");
-                
-      for (var i = 0; i < res.length; i++) {
-        console.log(res[i].item_Id + ".\t" + res[i].product_name + "\t" + res[i].department_name +"\t\t$" + (res[i].price).toLocaleString('en') + "\t " + res[i].stock_quantity);
-      }
-      mainMenu();
-    });
-        
-        console.log("\n");
-
-} 
-
-function addProduct(){
+function createDept(){
   
     inquirer
     .prompt([
           {
-                name: "product",
+                name: "newDept",
                 type: "input",
-                message: "What is the name of the product you wish to add?"
+                message: "What is the name of the new department?"
           },
-          {
-                name: "department",
-                type: "rawlist",
-                message: "\nWhat department is it in?\n",
-                choices: [
-                  "jet",
-                  "jetprop",
-                  "piston",
-                  "heli",
-                  "other"
-                ]
-            },
             {
-                name: "quantity",
+                name: "overHead",
                 type: "input",
-                message: "How many would you like to add?"
-            },
-            {
-                name: "price",
-                type: "input",
-                message: "What is the price for each?"
+                message: "What is the overhead percentage?"
             }
+            
       ])
     .then(function(answer){
 
             var query = connection.query(
-              "INSERT INTO products SET ?",
+              "INSERT INTO departments SET ?",
               {
-                product_name: answer.product,
-                department_name: answer.department,
-                price: answer.price,
-                stock_quantity: answer.quantity
+                department_name: answer.newDept,
+                over_head_costs: parseFloat(answer.overHead / 100)
               },
               function(err, res) {
-                console.log("\n\nYou have added: " + answer.quantity + " " + answer.product + "(s) in the " + answer.department + " department with a sales price of $" + answer.price.toLocaleString('en') + " each." );
+                console.log("\n\nYou have added: " + answer.newDept + " as a new department with an overhead cost of  " + answer.overHead + "%.");
                 mainMenu();
               });
 

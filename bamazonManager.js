@@ -1,7 +1,7 @@
 
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-
+var Table = require('cli-table3');
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -19,7 +19,28 @@ connection.connect(function(err) {
 
 function runManager(){
 
+  var arrCurDept=[];
+
+
+
+  function getDepts(){
+    var query = "SELECT department_name FROM departments";  //query without variable
+            connection.query(query, function(err, res) {
+    
+              for(var i = 0; i < res.length; i++){
+                arrCurDept.push(res[i].department_name);
+              }
+              
+              return arrCurDept;
+              
+            }); 
+          }
+
+      getDepts();    
+
+
     function mainMenu(){
+
         inquirer
           .prompt({         
             name: "action",
@@ -53,7 +74,8 @@ function runManager(){
               break;
       
             }     
-          });         
+          }); 
+                  
       } 
 
 
@@ -105,6 +127,7 @@ function viewLowInventory(){
 
 function addProduct(){
   
+
     inquirer
     .prompt([
           {
@@ -112,18 +135,13 @@ function addProduct(){
                 type: "input",
                 message: "What is the name of the product you wish to add?"
           },
+
           {
-                name: "department",
-                type: "rawlist",
-                message: "\nWhat department is it in?\n",
-                choices: [
-                  "jet",
-                  "jetprop",
-                  "piston",
-                  "heli",
-                  "other"
-                ]
-            },
+            name: "department",
+            type: "input",
+            message: "What department is it in?"
+      },
+
             {
                 name: "quantity",
                 type: "input",
@@ -137,6 +155,12 @@ function addProduct(){
       ])
     .then(function(answer){
 
+          
+        if(arrCurDept.indexOf(answer.department.toLowerCase())== -1){
+          console.log("You entered an invalid department name. Please try again or ask your manager to create a new department");
+          mainMenu();
+        } else {
+
             var query = connection.query(
               "INSERT INTO products SET ?",
               {
@@ -149,7 +173,7 @@ function addProduct(){
                 console.log("\n\nYou have added: " + answer.quantity + " " + answer.product + "(s) in the " + answer.department + " department with a sales price of $" + answer.price.toLocaleString('en') + " each." );
                 mainMenu();
               });
-
+            }
           
     })
   };

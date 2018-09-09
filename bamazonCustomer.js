@@ -1,6 +1,8 @@
 //1. dependencies
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require('cli-table3');
+
 
 //2. connection set up
 var connection = mysql.createConnection({
@@ -23,18 +25,47 @@ function runStore(){
   var thisSale = [];
 function showInventory(){
 
-    
+    // // instantiate
+// var table = new Table({
+//     head: ['Dept Id', 'Dept Name', 'Overhead (%)', "Dept Sales" , "Dept Profit"]
+//   , colWidths: [14, 14, 15, 20, 20]
+// }); 
+// // table is an Array, so you can `push`, `unshift`, `splice` and friends
+// table.push(
+//     [1, 'jet', '35%', '$5,519,000.95', '$4,123,899.02'],
+//     [1, 'jetprop', '28%', '$5,519,000.95', '$4,123,899.02']
+//   , 
+// );
+// console.log(table.toString());
+// // end table
+
+
     var query = "SELECT * FROM products";  //query without variable
 
     //this line takes the query, replaces the ? from var query with object, res is the result  
     connection.query(query, function(err, res) {
         console.log("\n");
-                
+     
+        
+      var table = new Table({
+          head: ['Product ID', 'Description', 'Price Each']
+        , colWidths: [14, 25, 35]
+      }); 
+
       for (var i = 0; i < res.length; i++) {
-        console.log(res[i].item_Id + ". " + res[i].product_name + "   \t$" + (res[i].price).toLocaleString('en'));
+
+        table.push([
+          res[i].item_Id,
+          res[i].product_name,
+          "$" + (Math.round((res[i].price + 0.00001) * 100) / 100).toLocaleString('en')
+        ])
+
+        // console.log(res[i].item_Id + ". " + res[i].product_name + "   \t$" + (res[i].price).toLocaleString('en'));
         //console.log(res[i].item_Id + ". " + res[i].product_name + "   \t$" + parseFloat(res[i].price).toFixed(2).toLocaleString('en'));
       }
+        console.log(table.toString());
         console.log("\n");
+
       inquirer
     .prompt([
       {

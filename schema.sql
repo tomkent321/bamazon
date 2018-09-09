@@ -56,7 +56,15 @@ FROM departments
 INNER JOIN products ON departments.department_name = products.department_name GROUP BY department_id;
 
 
+var query = "SELECT department_name FROM departments";  //query without variable
+        connection.query(query, function(err, res) {
 
+          for(var i = 0; i < res.length; i++){
+            arrCurDept.push(res[i].department_name);
+          }
+          console.log(arrCurDept);
+          
+        }); 
 
 
 
