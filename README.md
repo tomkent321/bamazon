@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width">
 </head>
 <body>
-
     <h1>Bamazon Application</h1>
     <br>
     <h2>Contents</h2>
@@ -20,7 +19,6 @@
     <br>
     <br>
     <br>
-
     <hr>
 <h2 id="Description">What Bamazon Does</h2>
     <p>Bamazon is a take off of the Amazon shopping site designed with a command line interface to simulate an aircraft sales store.</p>
@@ -46,43 +44,34 @@
     <h4>View Products</h4>
     <p>This is an expanded view of the store inventory</p>
     <img src="Mgr2.jpg" alt="Mgr2" >
-
     <h4>View Low Inventory</h4>
     <p>Shows products with less than 5 in stock</p>
     <img src="Mgr3.jpg" alt="Mgr3" >
-
     <h4>Add to Inventory</h4>
     <p>Allows the Manager to add stock to an existing product</p>
     <img src="Mgr4.jpg" alt="Mgr4" >
-
     <h4>Add New Product</h4>
     <p>Allows the Manager to add a new product to the inventory</p>
     <img src="Mgr5.jpg" alt="Mgr5" >
         <br>
         <br>
-        <br>
-    
+        <br> 
         <h3>Supervisor Interface</h3>
     <p>The Supervisor interface allows the Supervisor to perform various high-level functions.</p> 
     <img src="Sup1.jpg" alt="Sup Interface">
-
     <h4>View Product Sales by Department</h4>
     <p>This display links the data of both mySql tables and generates a profit field on the fly.</p>
     <p>It features a more realistic overhead calculated by a percentage of sales.</p>
     <img src="Sup2.jpg" alt="Sup2" >
-
     <h4>Create a new department</h4>
     <p>Allows (only) a supervisor to create a new product department</p>
     <p>A manager adding to inventory must enter a valid department based on the supervisor's department database.</p>
     <img src="Sup3.jpg" alt="Sup3" >
-
-
     <h4>Value of All Inventory</h4>
     <p>This is a value-added display which shows the total value of each product's inventory.</p>
     <img src="Sup4.jpg" alt="Sup4" >
     <p>It then calculates and displays the total inventory for the entire store.</p>
-    <img src="Sup5.jpg" alt="Sup5" >
-    
+    <img src="Sup5.jpg" alt="Sup5" > 
         <br>
         <br>
         <br>
