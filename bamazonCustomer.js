@@ -40,7 +40,7 @@ function showInventory(){
 // // end table
 
 
-    var query = "SELECT * FROM products";  //query without variable
+    var query = "SELECT * FROM products ORDER BY price";  //query without variable
 
     //this line takes the query, replaces the ? from var query with object, res is the result  
     connection.query(query, function(err, res) {
@@ -60,9 +60,10 @@ function showInventory(){
           "$" + (Math.round((res[i].price + 0.00001) * 100) / 100).toLocaleString('en')
         ])
 
-        // console.log(res[i].item_Id + ". " + res[i].product_name + "   \t$" + (res[i].price).toLocaleString('en'));
-        //console.log(res[i].item_Id + ". " + res[i].product_name + "   \t$" + parseFloat(res[i].price).toFixed(2).toLocaleString('en'));
       }
+        console.log("                ** Al's Aircraft Barn **\n");
+        console.log("                 Aircraft for any budget!\n");
+
         console.log(table.toString());
         console.log("\n");
 

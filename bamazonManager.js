@@ -85,16 +85,29 @@ function viewProducts(){
     //this line takes the query, replaces the ? from var query with object, res is the result  
     connection.query(query, function(err, res) {
         
-        console.log("\n");
-        console.log("                ** Al's Aircraft Barn **\n");
-        console.log("                ** Total Inventory **\n");
-        console.log("item ID  Product Name   Department   \tPrice   \t quantity in stock");
-        console.log("-------  -------------- ----------   \t-----   \t ----------------");
-                
-      for (var i = 0; i < res.length; i++) {
-        console.log(res[i].item_Id + ".\t" + res[i].product_name + "\t" + res[i].department_name +"\t\t$" + (res[i].price).toLocaleString('en') + "\t " + res[i].stock_quantity);
-        //console.log(res[i].item_Id + ". " + res[i].product_name + "   \t$" + parseFloat(res[i].price).toFixed(2).toLocaleString('en'));
-      }
+
+      var table = new Table({
+        head: ['item ID', 'Product Name', 'Dept','Price','Qty in Stock']
+      , colWidths: [10, 30, 10, 25, 14 ]
+    }); 
+
+    for (var i = 0; i < res.length; i++) {
+
+      table.push([
+        res[i].item_Id,
+        res[i].product_name,
+        res[i].department_name,
+        "$" + (Math.round((res[i].price + 0.00001) * 100) / 100).toLocaleString('en'),
+        res[i].stock_quantity
+      ])
+
+    }
+      console.log("                ** Al's Aircraft Barn **\n");
+      console.log("                 ** Total Inventory **\n");
+
+      console.log(table.toString());
+      console.log("\n");
+      
       mainMenu();
     });
         console.log("\n");
@@ -108,21 +121,32 @@ function viewLowInventory(){
 
     //this line takes the query, replaces the ? from var query with object, res is the result  
     connection.query(query, function(err, res) {
-        
-        console.log("\n");
-        console.log("                ** Al's Aircraft Barn **\n");
-        console.log("       ** Low Inventory (less than 5) Products **\n");
-        console.log("item ID  Product Name   Department   \tPrice   \t quantity in stock");
-        console.log("-------  -------------- ----------   \t-----   \t ----------------");
-                
-      for (var i = 0; i < res.length; i++) {
-        console.log(res[i].item_Id + ".\t" + res[i].product_name + "\t" + res[i].department_name +"\t\t$" + (res[i].price).toLocaleString('en') + "\t " + res[i].stock_quantity);
-      }
+      var table = new Table({
+        head: ['item ID', 'Product Name', 'Dept','Price','Qty in Stock']
+      , colWidths: [10, 30, 10, 25, 14 ]
+    }); 
+
+    for (var i = 0; i < res.length; i++) {
+
+      table.push([
+        res[i].item_Id,
+        res[i].product_name,
+        res[i].department_name,
+        "$" + (Math.round((res[i].price + 0.00001) * 100) / 100).toLocaleString('en'),
+        res[i].stock_quantity
+      ])
+
+    }
+      console.log("                ** Al's Aircraft Barn **\n");
+      console.log("                 ** Low Inventory (less than 5) **\n");
+
+      console.log(table.toString());
+      console.log("\n");
+      
       mainMenu();
     });
-        
         console.log("\n");
-
+        
 } 
 
 function addProduct(){
@@ -170,7 +194,29 @@ function addProduct(){
                 stock_quantity: answer.quantity
               },
               function(err, res) {
-                console.log("\n\nYou have added: " + answer.quantity + " " + answer.product + "(s) in the " + answer.department + " department with a sales price of $" + answer.price.toLocaleString('en') + " each." );
+
+                var table = new Table({
+                  head: ['quantity', 'Product Name', 'Dept','Price']
+                , colWidths: [10, 30, 10, 25]
+              }); 
+          
+                table.push([
+                  answer.quantity,
+                  answer.product,
+                  answer.department,
+                  "$" + (Math.round((parseFloat(answer.price) + 0.00001) * 100) / 100).toLocaleString('en'),
+                ])
+          
+             
+                console.log("\n\n                ** Al's Aircraft Barn **\n");
+                console.log("You added a new product:  \n");
+          
+                console.log(table.toString());
+
+
+
+
+                //console.log("\n\nYou have added: " + answer.quantity + " " + answer.product + "(s) in the " + answer.department + " department with a sales price of $" + answer.price.toLocaleString('en') + " each." );
                 mainMenu();
               });
             }
@@ -183,18 +229,28 @@ function addInventory(){
   var query = "SELECT * FROM products";  
 
   connection.query(query, function(err, res) {
-      console.log("\n");
-              
-      console.log("\n");
-      console.log("                ** Al's Aircraft Barn **\n");
-      console.log("                ** Current Inventory **\n");
-      console.log("item ID  Product Name   Department   \tPrice   \t quantity in stock");
-      console.log("-------  -------------- ----------   \t-----   \t ----------------");
-              
-    for (var i = 0; i < res.length; i++) {
-      console.log(res[i].item_Id + ".\t" + res[i].product_name + "\t" + res[i].department_name +"\t\t$" + (res[i].price).toLocaleString('en') + "\t " + res[i].stock_quantity);
-    }
-      console.log("\n");
+    var table = new Table({
+      head: ['item ID', 'Product Name', 'Dept','Price','Qty in Stock']
+    , colWidths: [10, 30, 10, 25, 14 ]
+  }); 
+
+  for (var i = 0; i < res.length; i++) {
+
+    table.push([
+      res[i].item_Id,
+      res[i].product_name,
+      res[i].department_name,
+      "$" + (Math.round((res[i].price + 0.00001) * 100) / 100).toLocaleString('en'),
+      res[i].stock_quantity
+    ])
+
+  }
+    console.log("                ** Al's Aircraft Barn **\n");
+    console.log("                 ** Current Inventory **\n");
+
+    console.log(table.toString());
+    console.log("\n");
+
     inquirer
   .prompt([
     {

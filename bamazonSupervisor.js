@@ -41,7 +41,9 @@ function runSupervisor(){
             message: "\nWhat would you like to do?\n",
             choices: [
               "View Product Sales by Department",
-              "Create New Department"
+              "Create New Department",
+              "Value of all Inventory"
+
               
             ]
           })       
@@ -56,9 +58,9 @@ function runSupervisor(){
               createDept();
               break;
       
-            // case "Add to Inventory":
-            //   addInventory();
-            //   break;
+            case "Value of all Inventory":
+              valueInventory();
+              break;
       
             // case "Add New Product":
             //   addProduct();
@@ -101,6 +103,7 @@ function viewSalesByDept(){
 
       console.log("\n                       Al's Aircraft Barn");
       console.log("             *****  Sales and Profit by Department   *****\n");
+      console.log("            (Departments with no Inventory will not be shown)  \n");
         
       console.log(table.toString());
 
@@ -205,6 +208,72 @@ function addInventory(){
   });
 } 
     
+
+
+function valueInventory() {
+
+
+  var query = "SELECT * FROM products ORDER BY department_name";  //query without variable
+
+  //this line takes the query, replaces the ? from var query with object, res is the result  
+  connection.query(query, function(err, res) {
+      
+
+    var table = new Table({
+      head: ['ID', 'Product Name', 'Dept','Price','Stock', 'Value All']
+    , colWidths: [6, 25, 12, 25, 7, 26 ]
+  }); 
+  
+  var table2 = new Table({
+    head: ['                   Total Value of All Inventory']
+  , colWidths: [79]
+}); 
+
+  var totalValue = 0;
+  for (var i = 0; i < res.length; i++) {
+
+    table.push([
+      res[i].item_Id,
+      res[i].product_name,
+      res[i].department_name,
+      "$" + (Math.round((res[i].price + 0.00001) * 100) / 100).toLocaleString('en'),
+      res[i].stock_quantity,
+      "$" + (Math.round(((res[i].price * res[i].stock_quantity) + 0.00001) * 100) / 100).toLocaleString('en')
+
+    ])
+      totalValue += (res[i].price * res[i].stock_quantity);
+  }
+    console.log("                ** Al's Aircraft Barn **\n");
+    console.log("                 ** Total Inventory **\n");
+
+    console.log(table.toString());
+    console.log("\n");
+    
+    table2.push( ["                         $" +(Math.round(((totalValue) + 0.00001) * 100) / 100).toLocaleString('en')])
+    console.log(table2.toString());
+
+    (Math.round(((totalValue) + 0.00001) * 100) / 100).toLocaleString('en')
+
+
+
+    mainMenu();
+  });
+      console.log("\n");
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 mainMenu();
 
